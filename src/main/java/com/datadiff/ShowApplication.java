@@ -1,4 +1,4 @@
-package com.datadiff.show;
+package com.datadiff;
 
 import com.datadiff.global.ExcelInfoCache;
 import com.datadiff.show.common.Data;
@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @SpringBootApplication
