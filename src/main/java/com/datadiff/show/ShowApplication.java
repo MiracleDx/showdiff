@@ -1,5 +1,6 @@
 package com.datadiff.show;
 
+import com.datadiff.global.ExcelInfoCache;
 import com.datadiff.show.common.Data;
 import com.datadiff.show.entity.WebUrl;
 import com.datadiff.show.service.DataDealServie;
@@ -18,7 +19,7 @@ public class ShowApplication implements ApplicationRunner {
 
 	@Resource
 	private DataDealServie dataDealServie;
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(ShowApplication.class, args);
 	}
@@ -31,12 +32,13 @@ public class ShowApplication implements ApplicationRunner {
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		//todo 从文件中加载uri路径
-		List<String> uris = Arrays
-				.asList("http://www.baidu.com", 
-						"http://club.epicc.com.cn/index", 
-						"https://baike.baidu.com");
+//		List<String> uris = Arrays
+//				.asList("http://www.baidu.com",
+//						"http://club.epicc.com.cn/index",
+//						"https://baike.baidu.com");
+        List<String> uris = ExcelInfoCache.getUrls();
 		int length = uris.size();
-		
+
 		WebUrl webUrl;
 		List<WebUrl> webUrises = new ArrayList<>(length);
 		// 抓取页面数据生成基准数据文件
