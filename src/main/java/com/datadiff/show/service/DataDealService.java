@@ -37,7 +37,7 @@ public class DataDealServie {
 			DataInfo dataInfo = new DataInfo();
 			dataInfo.setId(e.getId())
 					.setUrl(e.getUrl())
-					.setIsChange(ChangeStatus.NO.getStatus())
+					.setIsChange("")
 					.setDataContent("");
 			dataInfos.add(dataInfo);
 		});
