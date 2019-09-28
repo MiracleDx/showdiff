@@ -3,6 +3,8 @@ package com.datadiff.show.controller;
 import com.datadiff.show.entity.DataInfo;
 import com.datadiff.show.service.DataDealService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -28,42 +30,13 @@ public class ShowController {
 		return dataDealService.show();
 	}
 	
-	@GetMapping("/diff")
-	public List<DataInfo> diff() throws IOException {
-		// 测试数据
-		List<DataInfo> dataInfos = new ArrayList<>();
-		DataInfo dataInfo = new DataInfo();
-		dataInfo.setId(0)
-				.setUrl("http://www.baidu.com");
-
-		DataInfo dataInfo1 = new DataInfo();
-		dataInfo1.setId(1)
-				.setUrl("http://club.epicc.com.cn/index");
-
-		DataInfo dataInfo2 = new DataInfo();
-		dataInfo2.setId(2)
-				.setUrl("https://baike.baidu.com");
-		
-		dataInfos.add(dataInfo);
-		dataInfos.add(dataInfo1);
-		dataInfos.add(dataInfo2);
+	@PostMapping("/diff")
+	public List<DataInfo> diff(@RequestBody List<DataInfo> dataInfos) throws IOException {
 		return dataDealService.diff(dataInfos);
 	}
 	
-	@GetMapping("/set")
-	public void setData() throws IOException {
-		// 测试数据
-		List<DataInfo> dataInfos = new ArrayList<>();
-		DataInfo dataInfo = new DataInfo();
-		dataInfo.setId(0)
-				.setUrl("http://www.baidu.com");
-
-		DataInfo dataInfo1 = new DataInfo();
-		dataInfo1.setId(1)
-				.setUrl("https://baike.baidu.com");
-
-		dataInfos.add(dataInfo);
-		dataInfos.add(dataInfo1);
-		dataDealService.setBasicDatas(dataInfos);
+	@PostMapping("/set")
+	public List<DataInfo> setData(@RequestBody DataInfo dataInfo) throws IOException {
+		return dataDealService.setBasicDatas(dataInfo);
 	}
 }

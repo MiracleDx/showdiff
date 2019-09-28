@@ -3,37 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <title>数据对比</title>
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <link rel="stylesheet" type="text/css" href="element.css">
 </head>
+<style>
+    .distort{
+        color: #ef5a5a;
+    }
+
+    .unDistort{
+        color: #333333;
+    }
+</style>
 <body>
 <div id="app">
-
-    <el-button type="success" style="float: right; margin-right: 40px" @click="Contrast()">对比</el-button>
+    <el-button type="success" style="float: right; margin-right: 40px" @click="diff()">对比</el-button>
     <el-table
-            :data="tableData4"
+            :data="basicData"
             style="width: 100%"
-            stripe=true"
-            fit="true"
-          >
+            stripe="true" 
+            fit="true" 
+            @row-click="handleRowClick" 
+            @selection-change="handleSelectionChange" 
+            ref="multipleTable">
         <el-table-column
                 type="selection"
                 width="55">
         </el-table-column>
+        
         <el-table-column
                 fixed
-                prop="num"
+                prop="id"
                 label="序号"
                 width="150">
         </el-table-column>
-        <el-table-column
-                prop="ip"
-                label="IP地址"
-                >
+        
+        <el-table-column prop="url"  label="IP地址">
+            <template slot-scope="scope">
+                <a :href="scope.row.url" target="_blank">{{scope.row.url}}</a>
+            </template>
         </el-table-column>
-        <el-table-column
-                prop="flag"
-                label="是否被篡改"
-                >
+
+        <el-table-column prop="isChange" label="是否被篡改">
+            <template slot-scope="scope">
+                <div :class="scope.row.isChange == '是'? 'distort' : 'unDistort' "> {{ scope.row.isChange }}</div>
+            </template>
         </el-table-column>
 
         <el-table-column
@@ -42,133 +55,103 @@
                 width="120">
             <template slot-scope="scope">
                 <el-button
-                        @click.native.prevent="setBenchmark(scope.$index , tableData4)"
+                        @click.native.prevent="setData(scope.$index , basicData)"
                         type="text"
                         size="small">
-                    {{tableData4[scope.$index].key?'取消设置':'设置'}}
+                    {{basicData[scope.$index].key?'取消设置':'设置'}}
                 </el-button>
             </template>
         </el-table-column>
     </el-table>
 </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<script src="Vue.js"></script>
+<script src="element.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
         methods: {
-            setBenchmark(index) {
-                    fetch('url', {
-                        method: 'post',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            // TODO
-                        }),
-                    }).then(res => res.json()).then((data) => {
-                        // TODO
-                    }).catch(err => console.log(err))
-            },
 
+            //点击行触发，选中或不选中复选框
+            handleRowClick: function(row, column, event){
+                this.$refs.multipleTable.toggleRowSelection(row);
+            },
+            
             fetchData() {
-                fetch('url', {
-                    method: 'post',
+                const loading = this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                setTimeout(() => {
+                    
+                }, 2000);
+                fetch('http://localhost:8080/', {
+                    method: 'get',
                     headers: {
                         'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        // TODO
-                    }),
+                    }
                 }).then(res => res.json()).then((data) => {
-                    // TODO
+                    this.basicData = data;
+                    loading.close();
                 }).catch(err => console.log(err))
             },
 
-            Contrast() {
-                alert(111)
-                fetch('url', {
-                    method: 'post',
+            diff() {
+                const loading = this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                setTimeout(() => {
+
+                }, 2000);
+                fetch('http://localhost:8080/diff', {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        // TODO
-                    }),
+                    body: JSON.stringify(this.multipleSelection)
                 }).then(res => res.json()).then((data) => {
-                    // TODO
+                    this.basicData = data;
+                    loading.close();
                 }).catch(err => console.log(err))
             },
 
+            handleSelectionChange(val) {
+                this.multipleSelection = val;
+            },
+
+            setData(id, data) {
+                const loading = this.$loading({
+                    lock: true,
+                    text: 'Loading',
+                    spinner: 'el-icon-loading',
+                    background: 'rgba(0, 0, 0, 0.7)'
+                });
+                setTimeout(() => {
+
+                }, 2000);
+                fetch('http://localhost:8080/set', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(this.basicData[id])
+                }).then(res => res.json()).then((data) => {
+                    this.basicData = data;
+                    loading.close();
+                }).catch(err => console.log(err))
+            },
+            
         },
         data: {
-                cancel: '取消设置',
-                set: '设置',
-                tableData4: [{
-                    num: '1',
-                    ip: 'https://element.eleme.cn/2.0/#/zh-CN/component/table',
-                    flag: '否'
-
-                }, {
-                    num: '2',
-                    ip: 'https://www.baidu.com',
-                    flag: '否'
-
-                }, {
-                    num: '3',
-                    ip: 'https://fanyi.baidu.com',
-                    flag: '否'
-
-                }, {
-                    num: '4',
-                    ip: 'https://github.com',
-                    flag: '否'
-                }, {
-                    num: '5',
-                    ip: 'https://www.python.org',
-                    flag: '否'
-                }, {
-                    num: '6',
-                    ip: 'https://www.apple.com/iphone',
-                    flag: '否'
-                }, {
-                    num: '7',
-                    ip: 'https://www.huawei.com',
-                    flag: '否'
-                },
-                {
-                    num: '8',
-                    ip: 'https://element.eleme.cn/2.0/#/zh-CN/component/table',
-                    flag: '否'
-
-                }, {
-                    num: '9',
-                    ip: 'https://www.baidu.com',
-                    flag: '否'
-
-                }, {
-                    num: '10',
-                    ip: 'https://fanyi.baidu.com',
-                    flag: '否'
-
-                }, {
-                    num: '11',
-                    ip: 'https://github.com',
-                    flag: '否'
-                }, {
-                    num: '12',
-                    ip: 'https://www.python.org',
-                    flag: '否'
-                }, {
-                    num: '13',
-                    ip: 'https://www.apple.com/iphone',
-                    flag: '否'
-                }, {
-                    num: '14',
-                    ip: 'https://www.huawei.com',
-                    flag: '否'
-                }]
+            cancel: '取消设置',
+            set: '设置',
+            basicData: [],
+            multipleSelection: [],
         },
 
         mounted () {

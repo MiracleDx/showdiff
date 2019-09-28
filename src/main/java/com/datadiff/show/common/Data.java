@@ -1,8 +1,10 @@
 package com.datadiff.show.common;
 
-import com.datadiff.show.entity.WebUrl;
+import com.datadiff.show.entity.DataInfo;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -17,5 +19,5 @@ public class Data {
 	/**
 	 * 元数据
 	 */
-	public static List<WebUrl> basics = new CopyOnWriteArrayList<>();
+	public static Map<Integer, DataInfo> basics = new ConcurrentHashMap<>();
 }
