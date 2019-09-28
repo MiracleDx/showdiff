@@ -21,7 +21,7 @@ import java.util.List;
  * Modified by:
  */
 @Service
-public class DataDealServie {
+public class DataDealService {
 
 	/**
 	 * 展示数据
@@ -82,7 +82,6 @@ public class DataDealServie {
 			// todo 替换原文件中的内容  先替换原path做测试
 			WebUrl webUrl = Data.basics.get(id);
 			webUrl.setUrl(dataInfo.getUrl());
-			webUrl.setPath(html);
 		}
 	}
 
@@ -103,7 +102,7 @@ public class DataDealServie {
 	 */
 	public String getBasicPath(Integer id) {
 		WebUrl webUrl = Data.basics.get(id);
-		return webUrl.getPath();
+		return "";
 	}
 	
 }

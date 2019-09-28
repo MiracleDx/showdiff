@@ -1,7 +1,7 @@
 package com.datadiff.show.controller;
 
 import com.datadiff.show.entity.DataInfo;
-import com.datadiff.show.service.DataDealServie;
+import com.datadiff.show.service.DataDealService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,11 +21,11 @@ import java.util.List;
 public class ShowController {
 	
 	@Resource
-	private DataDealServie dataDealServie;
+	private DataDealService dataDealService;
 	
 	@GetMapping("/")
 	public List<DataInfo> show() {
-		return dataDealServie.show();
+		return dataDealService.show();
 	}
 	
 	@GetMapping("/diff")
@@ -47,7 +47,7 @@ public class ShowController {
 		dataInfos.add(dataInfo);
 		dataInfos.add(dataInfo1);
 		dataInfos.add(dataInfo2);
-		return dataDealServie.diff(dataInfos);
+		return dataDealService.diff(dataInfos);
 	}
 	
 	@GetMapping("/set")
@@ -64,6 +64,6 @@ public class ShowController {
 
 		dataInfos.add(dataInfo);
 		dataInfos.add(dataInfo1);
-		dataDealServie.setBasicDatas(dataInfos);
+		dataDealService.setBasicDatas(dataInfos);
 	}
 }

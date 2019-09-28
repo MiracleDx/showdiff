@@ -20,6 +20,11 @@ public class DataInfo {
 	private Integer id;
 
 	/**
+	 * 系统名称
+	 */
+	private String name;
+
+	/**
 	 * url
 	 */
 	private String url;
