@@ -5,11 +5,13 @@ import com.datadiff.persist.service.PersistService;
 import com.datadiff.util.ExcelImportUtil;
 import com.datadiff.util.PropertiesReader;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,6 +25,7 @@ import java.util.List;
 public class PersistServiceImpl implements PersistService {
 
     private static final String SAVE_PATH = PropertiesReader.get("showdiff.save.path");
+    private static final String SEPARATOR = ",";
 
     /**
      * 导入表格
@@ -73,8 +76,63 @@ public class PersistServiceImpl implements PersistService {
      */
     private void saveExcelInfo(ExcelInfo info, FileOutputStream stream)
             throws IOException {
-        String text = "\r\n" + info.getName() + "|" + info.getUrl();
+        String text = "\r\n" + info.getName() + SEPARATOR + info.getUrl();
         stream.write(text.getBytes());
+    }
+
+    /**
+     * 读取本地存储文件获取表格信息列表
+     *
+     * @return 表格信息列表
+     */
+    @Override
+    public List<ExcelInfo> readLocal() {
+        List<ExcelInfo> infos = new ArrayList<>();
+        try (BufferedReader bufferedReader = getBufferedReader()) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                if (StringUtils.isBlank(line) || !line.contains(SEPARATOR)) {
+                    continue;
+                }
+                ExcelInfo info = getExcelInfoFromLine(line);
+                infos.add(info);
+            }
+        } catch (Exception e) {
+            log.error("Error occurred when reading dictionary! ", e);
+        }
+        return infos;
+    }
+
+    /**
+     * 获取BufferedReader
+     *
+     * @return BufferedReader实例
+     */
+    private BufferedReader getBufferedReader() throws FileNotFoundException {
+        String path = PropertiesReader.get("showdiff.save.path");
+        File file = new File(path);
+        if (!file.isFile() || !file.exists()) {
+            throw new FileNotFoundException("File error or do not exists!");
+        }
+        InputStreamReader reader = new InputStreamReader(
+                new FileInputStream(file), Charset.defaultCharset());
+        return new BufferedReader(reader);
+    }
+
+    /**
+     * 从行数据中获取表格信息
+     *
+     * @param line 行数据
+     * @return 表格信息
+     */
+    private ExcelInfo getExcelInfoFromLine(String line) {
+        String[] infoArray = line.split(SEPARATOR);
+        String name = infoArray[0];
+        String url = infoArray[1];
+        ExcelInfo info = new ExcelInfo();
+        info.setName(name);
+        info.setUrl(url);
+        return info;
     }
 
 }
