@@ -74,6 +74,7 @@ public class ShowApplication implements ApplicationRunner {
 			log.info("init data from http");
 		}
 		Data.basics.forEach((k, v) -> log.info("catch data: {}", v));
+		openBrowser();
 	}
 
 	/**
@@ -172,6 +173,22 @@ public class ShowApplication implements ApplicationRunner {
 			}}, new SecureRandom());
 			HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory());
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 浏览器打开页面
+	 */
+	private void openBrowser() {
+		try {
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			Runtime.getRuntime().exec("cmd   /c   start   http://localhost:8080/index.html");
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

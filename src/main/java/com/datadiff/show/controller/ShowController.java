@@ -2,10 +2,7 @@ package com.datadiff.show.controller;
 
 import com.datadiff.show.entity.DataInfo;
 import com.datadiff.show.service.DataDealService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -19,6 +16,7 @@ import java.util.List;
  * Created in: 2019-09-27 16:15
  * Modified by:
  */
+@CrossOrigin
 @RestController
 public class ShowController {
 	

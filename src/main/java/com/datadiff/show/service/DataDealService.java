@@ -6,6 +6,7 @@ import com.datadiff.show.common.Data;
 import com.datadiff.show.entity.DataInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.springframework.beans.factory.annotation.Value;
@@ -91,9 +92,14 @@ public class DataDealService {
 	 * @param resource url信息
 	 */
 	public String catchHtml(String resource) throws IOException {
-		Document doc = Jsoup.connect(resource)
-				.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.90 Safari/537.36")
-				.get();
+		Connection connect = Jsoup.connect(resource);
+		log.info(resource);
+		connect = connect.header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+		connect.header("Accept-Encoding", "gzip, deflate, sdch");
+		connect.header("Accept-Language", "zh-CN,zh;q=0.8");
+		Document doc = connect
+				.userAgent("Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31")
+				.timeout(10000).get();
 		return doc.toString();
 	}
 
@@ -105,7 +111,6 @@ public class DataDealService {
 		boolean result = StringUtils.equals(replaceField(html), replaceField(local));
 		dataInfo.setIsChange(result ? ChangeStatus.NO.getStatus() : ChangeStatus.YES.getStatus());
 	}
-
 	/**
 	 * 替换一些不验证字段
 	 * @param str

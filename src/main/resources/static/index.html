@@ -162,7 +162,9 @@
         },
 
         mounted () {
-            this.fetchData();
+            setTimeout(() => {
+                this.fetchData();
+            }, 1000)
         },
     })
 </script>
