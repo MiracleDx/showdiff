@@ -102,7 +102,25 @@ public class DataDealService {
 	 */
 	public void different(String html, String local, DataInfo dataInfo) {
 		// 判断是否被篡改 true未篡改 false篡改  因为本地存储会合并成一行 分行读取需要增加换行符
-		boolean result = StringUtils.equals(html, local);
+		boolean result = StringUtils.equals(replaceField(html), replaceField(local));
 		dataInfo.setIsChange(result ? ChangeStatus.NO.getStatus() : ChangeStatus.YES.getStatus());
+	}
+
+	/**
+	 * 替换一些不验证字段
+	 * @param str
+	 * @return
+	 */
+	private String replaceField(String str) {
+		// 替换隐藏域
+		str = str.replaceAll("(<input type=\"hidden\").+", "123");
+		// 替换一些动态js（js全部替换）
+		str = str.replaceAll("<script language.+", "");
+		// 替换一些动态css（css全部替换）
+		str = str.replaceAll("<link.+", "");
+		// 替换动态字段
+		str = str.replaceAll("<span style=\"display:none;\">.+", "");
+		str = str.replaceAll("<input id=\"serverName\".+", "");
+		return str;
 	}
 }

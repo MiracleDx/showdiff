@@ -53,6 +53,8 @@ public class ShowApplication implements ApplicationRunner {
 	 */
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
+		// 判断Excel是否存在
+		persistService.checkFile();
 		// 跳过https
 		checkQuietly();
 		//从文件中加载基础信息
